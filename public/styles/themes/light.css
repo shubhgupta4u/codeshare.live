@@ -1,0 +1,44 @@
+:root {
+    --shade-100: #6c757d;
+    --shade-200: #f8f8f8;
+    --shade-300: #ced4da;
+    --shade-400: #dee2e6;
+    --shade-500: #ebebeb;
+    --shade-600: #f8f9fa;
+  
+    /* --text-color-primary: #7743DB; */
+    --text-color-primary: #1e1e1e;
+    --text-color-secondary: #949694;
+    --text-color-active-link: #007acc;
+    --default-border-color:#ebebeb;
+
+    --bs-heading-color: var(--text-color-primary);
+    /* Header */
+    --bs-header-bg-color: var(--shade-200);
+    --bs-header-border-color: var(--default-border-color);
+    --bs-header-color: var(--text-color-primary);
+  
+    /* Footer */
+    --bs-footer-bg-color: var(--shade-200);
+    --bs-footer-border-color: var(--default-border-color);
+    --bs-footer-color: var(--text-color-primary);
+  
+    /* Main div*/
+    --bs-main-bg-color: var(--shade-400);
+    --bs-main-border-color: var(--shade-400);
+  
+    /* Navbar */
+    --bs-navbar-bg-color: var(--shade-200);
+    --bs-navbar-border-color: var(--default-border-color);
+
+    --bs-navbar-icon-color: var(--text-color-secondary);
+    --bs-nb-menu-text-color: var(--text-color-secondary);
+    --bs-nb-menu-selected-color: var(--text-color-primary);
+    --bs-nb-menu-selected-bg-color: var(--shade-500);
+    
+    --bs-nb-submenu-text-color: var(--text-color-primary);
+    --bs-nb-submenu-selected-color: var(--text-color-active-link);
+    --bs-nb-submenu-selected-bg-color: var(--shade-500);
+    --bs-nb-submenu-bg-color: var(--shade-500);
+  
+}

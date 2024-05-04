@@ -1,0 +1,14 @@
+.header {
+  width: 100vw;
+  position: fixed;
+  height: 50px;
+  top: 0;
+  background-color: var(--bs-header-bg-color);
+  border: 1px solid var(--bs-header-border-color);
+  z-index: 10;
+  padding: 5px 20px;
+  color: var(--bs-header-color);
+}
+.logo{
+  font-size: var(--fs-400) !important;
+}

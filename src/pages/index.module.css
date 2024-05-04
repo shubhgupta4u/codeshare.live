@@ -1,0 +1,7 @@
+.main {
+    width: 100vw;
+    padding: 50px 0 50px 50px;
+    height: 100vh;
+    background-color: var(--bs-main-bg-color);
+    border: 1px solid var(--bs-main-border-color);
+}
