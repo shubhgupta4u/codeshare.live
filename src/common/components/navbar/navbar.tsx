@@ -3,24 +3,30 @@ import { MenuItem, Theme } from "@/common/constants/enums";
 import { setTheme } from "@/common/state/themeSlice";
 import { setMenuClicked } from "@/common/state/menuClickedSlice";
 import { RootState } from "@/store/store";
-import { FloppyDisk, Share, Sun, SunHorizon, Moon, MoonStars, Palette, FilePlus, Gear, DownloadSimple } from "@phosphor-icons/react";
+import 
+    { Upload, FloppyDisk, Share, Sun, SunHorizon, Moon, MoonStars, Palette, FilePlus, Gear, Download,FolderOpen } 
+from "@phosphor-icons/react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Tooltip } from "react-tooltip";
 
 export function NavBar() {
     const dispatch = useDispatch();
     const theme = useSelector((state: RootState) => state.themeSliceReducer.theme);
+
     useEffect(() => {
         const storedTheme = localStorage.getItem("theme");
         if (storedTheme != undefined && JSON.parse(storedTheme) >= 1 && JSON.parse(storedTheme) <= 4) {
             dispatch(setTheme(JSON.parse(storedTheme)));
         }
     }, []);
+
     const changeTheme = (theme: Theme) => {
         dispatch(setTheme(theme));
         const themeSelectionPopup = document.getElementById("themeSelectionPopup");
         themeSelectionPopup?.classList.add("hide");
     }
+
     const openThemePopup = () => {
         const themeMenuItem = document.getElementById("themeMenuItem");
         const themeSelectionPopup = document.getElementById("themeSelectionPopup");
@@ -38,33 +44,62 @@ export function NavBar() {
         }
         dispatch(setMenuClicked(MenuItem.Theme));
     }
-    const openSharePopup = () => {
-        dispatch(setMenuClicked(MenuItem.Share));
-    }
-    const saveCode = () => {
-        dispatch(setMenuClicked(MenuItem.Save));
+    const menuItemClicked=(menuitem:MenuItem)=>{
+        dispatch(setMenuClicked(menuitem));
     }
     return (
         <>
             <div className={`${styles.navbar}`}>
                 <div id="themeMenuItem" className={styles.menuitem}>
-                    <a onClick={() => openThemePopup()}><Palette weight="fill" className={styles.icon} /></a>
+                    <a onClick={() => openThemePopup()}
+                        data-tooltip-id="my-tooltip"
+                        data-tooltip-content="Change Theme">
+                        <Palette weight="fill" className={styles.icon} /></a>
+          
                 </div>
                 <div id="saveMenuItem" className={styles.menuitem}>
-                    <a onClick={() => saveCode()}><FloppyDisk weight="fill" className={styles.icon} /></a>
+                <a onClick={() => menuItemClicked(MenuItem.Save)}
+                        data-tooltip-id="my-tooltip"
+                        data-tooltip-content="Save Session">
+                        <FloppyDisk weight="fill" className={styles.icon} /></a>
                 </div>
                 <div id="shareMenuItem" className={styles.menuitem}>
-                    <a onClick={() => openSharePopup()}><Share weight="fill" className={styles.icon} /></a>
+                <a onClick={() => menuItemClicked(MenuItem.Share)}
+                        data-tooltip-id="my-tooltip"
+                        data-tooltip-content="Share">
+                        <Share weight="fill" className={styles.icon} /></a>
                 </div>
                 <div className={styles.menuitem}>
-                    <a><DownloadSimple weight="fill" className={styles.icon} /></a>
+                <a onClick={() => menuItemClicked(MenuItem.Upload)}
+                        data-tooltip-id="my-tooltip"
+                        data-tooltip-content="Upload">
+                        <Upload weight="fill" className={styles.icon} /></a>
                 </div>
                 <div className={styles.menuitem}>
-                    <a><Gear weight="fill" className={styles.icon} /></a>
+                <a onClick={() => menuItemClicked(MenuItem.Download)}
+                        data-tooltip-id="my-tooltip"
+                        data-tooltip-content="Download">
+                        <Download weight="fill" className={styles.icon} /></a>
                 </div>
                 <div className={styles.menuitem}>
-                    <a><FilePlus weight="fill" className={styles.icon} /></a>
+                <a onClick={() => menuItemClicked(MenuItem.Setting)}
+                        data-tooltip-id="my-tooltip"
+                        data-tooltip-content="Setting">
+                        <Gear weight="fill" className={styles.icon} /></a>
                 </div>
+                <div className={styles.menuitem}>
+                <a onClick={() => menuItemClicked(MenuItem.NewSession)}
+                        data-tooltip-id="my-tooltip"
+                        data-tooltip-content="New Session">
+                        <FilePlus weight="fill" className={styles.icon} /></a>
+                </div> 
+                <div className={styles.menuitem}>
+                    <a onClick={() => menuItemClicked(MenuItem.OpenCachedSession)}
+                        data-tooltip-id="my-tooltip"
+                        data-tooltip-content="Open Cached Session">
+                        <FolderOpen weight="fill" className={styles.icon} /></a>
+                </div>  
+                <Tooltip id="my-tooltip" />
             </div >
             <div id="themeSelectionPopup" className={`${styles.theme_menu_popup} ${styles.collapse}`}>
                 <ul>

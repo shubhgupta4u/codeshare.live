@@ -18,7 +18,7 @@ export function Header() {
             <nav>
 
                 <div>
-                    <h2><FileCode weight="fill" className={styles.logo}  /> {domainName}</h2>
+                    <h2 className="title"><FileCode weight="fill" className={styles.logo}  /> {domainName}</h2>
                 </div>
             </nav >
 

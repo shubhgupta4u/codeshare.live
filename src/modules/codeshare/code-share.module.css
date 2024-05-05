@@ -1,0 +1,41 @@
+.form_field {
+    margin-bottom: 20px;
+    .label {
+        margin-bottom: 10px;
+    }
+}
+p.modeltext {
+    margin: 0 0 20px;
+    line-height: 1.6;
+    font-weight: 400;
+    color:  #111;
+}
+input[type=text].model_input{
+    border-radius: 5px;
+    padding: 5px;
+    border: 1px solid #d9dadb;
+    outline: none;
+    height: 50px;
+    font-size: 18px;
+    width: 300px;
+    background-color: rgba(255, 255, 255, .9);
+}
+span.copy{
+    color: #4d76ba;
+    opacity: 0;
+}
+span.copy_success{
+    opacity: 1;
+}
+.modal_footer {
+    padding: 20px 0 0;
+}
+.icon{
+    font-size: 32px;
+    fill: gray;
+    text-align: center;
+    vertical-align: middle;
+}
+.error{
+    color: var(--bs-danger);
+}

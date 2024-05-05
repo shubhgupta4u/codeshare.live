@@ -9,7 +9,10 @@ export enum Theme {
     Save,
     Share,
     Download,
-    Setting
+    Setting,
+    NewSession,
+    Upload,
+    OpenCachedSession
   }
 
   

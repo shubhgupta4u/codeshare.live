@@ -1,6 +1,6 @@
 export default class SessionCodeProvider{   
             
-    static  get(length:number, chars:string="aA#!"):string {
+    static  get(length:number, chars:string="aA#"):string {
         var mask = '';
         if (chars.indexOf('a') > -1) mask += 'abcdefghijklmnopqrstuvwxyz';
         if (chars.indexOf('A') > -1) mask += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
