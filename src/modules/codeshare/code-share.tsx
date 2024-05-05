@@ -56,6 +56,25 @@ export default function CodeShareComponent() {
     const [domainName, setDomainName] = useState(Constants.DomainName.toLocaleLowerCase())
     const params = useParams();
     const router = useRouter();
+    let unsubscribe:any;
+
+    useEffect(() => {
+        if(unsubscribe){
+            unsubscribe();
+        }
+        if (sessionCode !== undefined && sessionCode?.length == 5 && writeAccessCode === undefined) {
+             unsubscribe = CodeSessionRepository.subscribe(sessionCode, (data:any) => {
+                if(data){
+                    setCode(getCloneCode(data.code, data.writeAccessCode, data.created, data.modified));
+                }
+            });
+
+            return () => {
+                if(unsubscribe) 
+                    unsubscribe();
+            }
+        }
+    }, [sessionCode]);
 
     useEffect(() => {
         if (params && params.codes && params.codes.length > 0) {
@@ -137,7 +156,7 @@ export default function CodeShareComponent() {
     const saveClickedHandler = () => {
         showLoading("Saving...")
         setTimeout(() => {
-            SaveCode().then(() => {
+            SaveCode(code).then(() => {
                 hideLoading();
             }).catch(() => {
                 hideLoading();
@@ -204,7 +223,13 @@ export default function CodeShareComponent() {
                     const fileReader = new FileReader();
                     fileReader.onload = () => {
                         const fileContent = fileReader.result as string;
-                        setCode(getCloneCode(fileContent, writeAccessCode, undefined, undefined));
+                        const cloneCode=getCloneCode(fileContent,code.writeAccessCode?? writeAccessCode, code.created??undefined,code.modified?? undefined);
+                        setCode(cloneCode);
+                        if (editorOption.autoSaving) {
+                            setTimeout(() => {
+                                SaveCode(cloneCode);
+                            }, 200);
+                        }
                     };
                     fileReader.readAsText(file);
                 }
@@ -219,9 +244,9 @@ export default function CodeShareComponent() {
     const hideLoading = () => {
         setLoading({ isLoading: false, loadingText: "Processing ... " });
     }
-    const SaveCode = () => {
+    const SaveCode = (localCode:Code) => {
         if (sessionCode !== undefined && writeAccessCode !== undefined) {
-            return CodeSessionRepository.updateCodeSession(sessionCode, code).then((data: any)=>{
+            return CodeSessionRepository.updateCodeSession(sessionCode, localCode).then((data: any)=>{
                 if(localStorage.getItem("sessionCode")!==JSON.stringify(data.sessionCode)){
                     localStorage.setItem("sessionCode",JSON.stringify(data.sessionCode));
                     localStorage.setItem("writeAccessCode",JSON.stringify(data.writeAccessCode))
@@ -229,12 +254,12 @@ export default function CodeShareComponent() {
                 }
             });
         } else if (sessionCode === undefined && writeAccessCode === undefined) {
-            return CodeSessionRepository.createCodeSession(code.code).then((data: any) => {
+            return CodeSessionRepository.createCodeSession(localCode.code).then((data: any) => {
                 if (data != undefined && data.sessionCode != null) {
                     setSessionCode(data.sessionCode);
                     setWriteAccessCode(data.writeAccessCode);
                     addSessionHistory(data.sessionCode,data.writeAccessCode);
-                    setCode(getCloneCode(code.code, data.writeAccessCode, code.created, code.modified));
+                    setCode(getCloneCode(localCode.code, data.writeAccessCode, localCode.created, localCode.modified));
                     router.push(`/${data.sessionCode}/${data.writeAccessCode}`);
                 }
 
@@ -278,11 +303,12 @@ export default function CodeShareComponent() {
         handleShareModelOpen();
     }
     function onChange(newValue: any) {
-        setCode(getCloneCode(newValue, code.writeAccessCode, code.created, code.modified));
+        const cloneCode=getCloneCode(newValue, code.writeAccessCode, code.created, code.modified);
+        setCode(cloneCode);
 
         if (editorOption.autoSaving) {
             setTimeout(() => {
-                SaveCode();
+                SaveCode(cloneCode);
             }, 200);
         }
     }
@@ -343,7 +369,7 @@ export default function CodeShareComponent() {
             <AceEditor
                 mode="java"
                 theme={currentTheme}
-                placeholder="Write or paste code here then share. Anyone you share with will see code as it is typed!"
+                placeholder="Write or paste code here then share. Anyone you share with readonly URL will see code as it is typed!"
                 height="100%"
                 width="100%"
                 fontSize={editorOption.fontSize}
@@ -372,7 +398,7 @@ export default function CodeShareComponent() {
                         <div>
                             <p className={styles.modeltext}>Anyone with access to this URL will see your code in real time.</p>
                             <div className={styles.form_field} hidden={sessionCode === undefined}>
-                                <label className={styles.label}>Share this URL for readonly view only</label>
+                                <label className={styles.label}>Share this URL for <b>readonly view only</b></label>
                                 <input className={styles.model_input} type="text" name="url" id="url" readOnly={true} value={`${domainName}/${sessionCode}`} />
                                 <a onClick={() => { copyText(`${domainName}/${sessionCode}`, true) }}
                                     data-tooltip-id="my-tooltip"
@@ -381,7 +407,7 @@ export default function CodeShareComponent() {
                                 <span className={`${styles.copy} copy_success copy1`}>Copied!</span>
                             </div>
                             <div className={styles.form_field} hidden={sessionCode === undefined || writeAccessCode === undefined}>
-                                <label className={styles.label}>Share this URL for allowing access with write permission</label>
+                                <label className={styles.label}>Share this URL for allowing access with <b>write permission</b></label>
                                 <input className={styles.model_input} type="text" name="url" id="url" readOnly={true} value={`${domainName}/${sessionCode}/${writeAccessCode}`} />
                                 <a onClick={() => { copyText(`${domainName}/${sessionCode}/${writeAccessCode}`, false) }}
                                     data-tooltip-id="my-tooltip"

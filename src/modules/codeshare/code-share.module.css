@@ -15,8 +15,8 @@ input[type=text].model_input{
     padding: 5px;
     border: 1px solid #d9dadb;
     outline: none;
-    height: 50px;
-    font-size: 18px;
+    height: 40px;
+    font-size: 16px;
     width: 300px;
     background-color: rgba(255, 255, 255, .9);
 }

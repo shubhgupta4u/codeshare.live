@@ -3,8 +3,8 @@
     "public": "out",
     "rewrites": [
       {
-        "source": "/rules",
-        "destination": "/rules.html"
+        "source": "**",
+        "destination": "/[[...codes]].html"
       }
     ],
     "ignore": [
